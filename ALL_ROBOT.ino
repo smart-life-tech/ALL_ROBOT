@@ -176,30 +176,60 @@ void loop()
 
     if ((rightDistance > 70) && (leftDistance > 70))
     {
+      Serial.println("stoping");
+      Serial.print("right measuremnet :");
+      Serial.println(rightDistance);
+      Serial.print("right measuremnet :");
+      Serial.println(rightDistance);
       Stop();
     }
     else if ((rightDistance >= 20) && (leftDistance >= 20))
     {
       forword();
+      Serial.println("forward ");
+      Serial.print("right measuremnet :");
+      Serial.println(rightDistance);
+      Serial.print("right measuremnet :");
+      Serial.println(rightDistance);
     }
     else if ((rightDistance <= 10) && (leftDistance <= 10))
     {
       backword();
+      Serial.println("backwards");
+      Serial.print("right measuremnet :");
+      Serial.println(rightDistance);
+      Serial.print("right measuremnet :");
+      Serial.println(rightDistance);
       delay(100);
     }
     else if (rightDistance - 3 > leftDistance)
     {
       turnLeft();
+      Serial.println("left turn");
+      Serial.print("right measuremnet :");
+      Serial.println(rightDistance);
+      Serial.print("right measuremnet :");
+      Serial.println(rightDistance);
       delay(100);
     }
     else if (rightDistance + 3 < leftDistance)
     {
       turnRight();
+      Serial.println("tuen right");
+      Serial.print("right measuremnet :");
+      Serial.println(rightDistance);
+      Serial.print("right measuremnet :");
+      Serial.println(rightDistance);
       delay(100);
     }
     else
     {
       Stop();
+      Serial.println("stopping");
+      Serial.print("right measuremnet :");
+      Serial.println(rightDistance);
+      Serial.print("right measuremnet :");
+      Serial.println(rightDistance);
     }
   }
 
