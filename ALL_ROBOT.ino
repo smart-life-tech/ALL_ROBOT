@@ -1,16 +1,17 @@
 #include <SoftwareSerial.h>
 #include "Servo.h" //servo library
-Servo myservo;     // create servo object to control servo
+
+Servo myservo;                  // create servo object to control servo
 SoftwareSerial BT_Serial(2, 3); // RX, TX
 
 #define enA 10 // Enable1 L298 Pin enA
-#define in1 9  // Motor1  L298 Pin in1
+#define in1 4  // Motor1  L298 Pin in1
 #define in2 8  // Motor1  L298 Pin in1
 #define in3 7  // Motor2  L298 Pin in1
 #define in4 6  // Motor2  L298 Pin in1
 #define enB 5  // Enable2 L298 Pin enB
 
-#define servo A4
+#define servo 9
 
 #define R_S A0 // ir sensor Right
 #define L_S A1 // ir sensor Left
@@ -57,22 +58,24 @@ void setup()
   Serial.begin(9600); // start serial communication at 9600bps
   BT_Serial.begin(9600);
   myservo.attach(servo); // attach servo on pin a4 to servo object
-  /*pinMode(servo, OUTPUT);
+                         /*pinMode(servo, OUTPUT);*/
 
-    for (int angle = 70; angle <= 140; angle += 5)
-    {
-       servoPulse(servo, angle);
-    }
-    for (int angle = 140; angle >= 0; angle -= 5)
-    {
-       servoPulse(servo, angle);
-    }
+  for (int angle = 70; angle <= 140; angle += 5)
+  {
+    servoPulse(servo, angle);
+  }
+  for (int angle = 140; angle >= 0; angle -= 5)
+  {
+    servoPulse(servo, angle);
+  }
 
-    for (int angle = 0; angle <= 70; angle += 5)
-    {
-       servoPulse(servo, angle);
-    }*/
+  for (int angle = 0; angle <= 70; angle += 5)
+  {
+    servoPulse(servo, angle);
+  }
   delay(500);
+  mode = 0;
+  bt_ir_data == 8;
 }
 
 void loop()
@@ -80,9 +83,10 @@ void loop()
 
   if (BT_Serial.available() > 0)
   { // if some date is sent, reads it and saves in state
-    bt_ir_data = BT_Serial.read();
+    String bt_data = BT_Serial.readStringUntil('\n');
+    bt_ir_data = bt_data.toInt();
     Serial.println(bt_ir_data);
-    if (bt_ir_data > 20)
+    if (bt_ir_data > 20 && bt_ir_data < 255)
     {
       Speed = bt_ir_data;
     }
@@ -90,18 +94,24 @@ void loop()
 
   if (bt_ir_data == 8)
   {
+    Serial.println("manual mode 0 selected");
     mode = 0;
     Stop();
-  } // Manual Android Application and IR Remote Control Command
+    bt_ir_data == 800;
+  } // Manual Android Application
   else if (bt_ir_data == 0)
   {
     mode = 1;
+    Serial.println("object follower mode 1 selected");
     Speed = 130;
+    bt_ir_data == 800;
   } // Auto Line Follower Command
   else if (bt_ir_data == 10)
   {
     mode = 2;
+    Serial.println("obstacle avoidance mode 2 selected");
     Speed = 255;
+    bt_ir_data == 800;
   } // Auto Obstacle Avoiding Command
 
   analogWrite(enA, Speed); // Write The Duty Cycle 0 to 255 Enable Pin A for Motor1 Speed
@@ -215,11 +225,12 @@ void loop()
 
 void servoPulse(int pin, int angle)
 {
-  int pwm = (angle * 11) + 500; // Convert angle to microseconds
-  digitalWrite(pin, HIGH);
-  delayMicroseconds(pwm);
-  digitalWrite(pin, LOW);
-  delay(50); // Refresh cycle of servo
+  // int pwm = (angle * 11) + 500; // Convert angle to microseconds
+  // digitalWrite(pin, HIGH);
+  // delayMicroseconds(pwm);
+  // digitalWrite(pin, LOW);
+  // delay(50); // Refresh cycle of servo
+  myservo.write(angle);
 }
 
 //**********************Ultrasonic_read****************************
@@ -281,7 +292,7 @@ void Check_side()
 }
 
 void forword()
-{ // forword
+{                          // forword
   digitalWrite(in1, HIGH); // Right Motor forword Pin
   digitalWrite(in2, LOW);  // Right Motor backword Pin
   digitalWrite(in3, LOW);  // Left Motor backword Pin
@@ -289,7 +300,7 @@ void forword()
 }
 
 void backword()
-{ // backword
+{                          // backword
   digitalWrite(in1, LOW);  // Right Motor forword Pin
   digitalWrite(in2, HIGH); // Right Motor backword Pin
   digitalWrite(in3, HIGH); // Left Motor backword Pin
@@ -297,7 +308,7 @@ void backword()
 }
 
 void turnRight()
-{ // turnRight
+{                          // turnRight
   digitalWrite(in1, LOW);  // Right Motor forword Pin
   digitalWrite(in2, HIGH); // Right Motor backword Pin
   digitalWrite(in3, LOW);  // Left Motor backword Pin
@@ -305,7 +316,7 @@ void turnRight()
 }
 
 void turnLeft()
-{ // turnLeft
+{                          // turnLeft
   digitalWrite(in1, HIGH); // Right Motor forword Pin
   digitalWrite(in2, LOW);  // Right Motor backword Pin
   digitalWrite(in3, HIGH); // Left Motor backword Pin
@@ -313,7 +324,7 @@ void turnLeft()
 }
 
 void Stop()
-{ // stop
+{                         // stop
   digitalWrite(in1, LOW); // Right Motor forword Pin
   digitalWrite(in2, LOW); // Right Motor backword Pin
   digitalWrite(in3, LOW); // Left Motor backword Pin
