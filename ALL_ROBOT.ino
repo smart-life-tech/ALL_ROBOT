@@ -1,27 +1,19 @@
-// #include <SoftwareSerial.h>// for avrs
-// SoftwareSerial BT_Serial(2, 3); // RX, TX
-
-// #include "Servo.h"              //servo library
-
+#include <ESP32Servo.h>
 #include "BluetoothSerial.h" // for esp 32 tests
 BluetoothSerial BT_Serial;
 
-// Servo myservo;                  // create servo object to control servo
+Servo myservo; // create servo object to control servo
 
-#define enA 10 // Enable1 L298 Pin enA
-#define in1 4  // Motor1  L298 Pin in1
-#define in2 8  // Motor1  L298 Pin in1
-#define in3 7  // Motor2  L298 Pin in1
-#define in4 6  // Motor2  L298 Pin in1
-#define enB 5  // Enable2 L298 Pin enB
+#define enA 15 // Enable1 L298 Pin enA
+#define in1 2  // Motor1  L298 Pin in1
+#define in2 4  // Motor1  L298 Pin in1
+#define in3 5  // Motor2  L298 Pin in1
+#define in4 18 // Motor2  L298 Pin in1
+#define enB 19 // Enable2 L298 Pin enB
 
-#define servo 9
-
-#define R_S A0 // ir sensor Right
-#define L_S 5  // ir sensor Left
-
-#define echo 5     // Echo pin
-#define trigger A3 // Trigger pin
+#define servo 26
+#define echo 21    // Echo pin
+#define trigger 22 // Trigger pin
 int rightDistance = 0, leftDistance = 0;
 int distance_L, distance_F = 30, distance_R;
 long distance;
@@ -45,9 +37,6 @@ int Distance_test()
 }
 void setup()
 { // put your setup code here, to run once
-/*
-  pinMode(R_S, INPUT); // declare if sensor as input
-  pinMode(L_S, INPUT); // declare ir sensor as input
 
   pinMode(echo, INPUT);     // declare ultrasonic sensor Echo pin as input
   pinMode(trigger, OUTPUT); // declare ultrasonic sensor Trigger pin as Output
@@ -58,10 +47,17 @@ void setup()
   pinMode(in3, OUTPUT); // declare as output for L298 Pin in3
   pinMode(in4, OUTPUT); // declare as output for L298 Pin in4
   pinMode(enB, OUTPUT); // declare as output for L298 Pin enB
-*/
+
   Serial.begin(9600); // start serial communication at 9600bps
                       // BT_Serial.begin(9600);
-  BT_Serial.begin("AutoFill");
+  BT_Serial.begin("allRobot");
+  // Allow allocation of all timers
+  ESP32PWM::allocateTimer(0);
+  ESP32PWM::allocateTimer(1);
+  ESP32PWM::allocateTimer(2);
+  ESP32PWM::allocateTimer(3);
+  myservo.setPeriodHertz(50);        // standard 50 hz servo
+  myservo.attach(servo, 1000, 2000); // attaches the servo on pin 18 to the servo object
   // myservo.attach(servo); // attach servo on pin a4 to servo object
   /*pinMode(servo, OUTPUT);*/
 
@@ -79,7 +75,8 @@ void setup()
     servoPulse(servo, angle);
   }
   delay(500);
-  int mode = 0;
+  mode = 0;
+  bt_ir_data = 8;
 }
 
 void loop()
@@ -100,21 +97,24 @@ void loop()
   {
     Serial.println("manual mode 0 selected");
     mode = 0;
-    //Stop();
+    Stop();
+    bt_ir_data = 600;
   } // Manual Android Application
   else if (bt_ir_data == 0)
   {
     mode = 1;
     Serial.println("object follower mode 1 selected");
     Speed = 130;
+    bt_ir_data = 600;
   } // Auto Line Follower Command
   else if (bt_ir_data == 10)
   {
     mode = 2;
     Serial.println("obstacle avoidance mode 2 selected");
     Speed = 255;
+    bt_ir_data = 600;
   } // Auto Obstacle Avoiding Command
-/*
+
   analogWrite(enA, Speed); // Write The Duty Cycle 0 to 255 Enable Pin A for Motor1 Speed
   analogWrite(enB, Speed); // Write The Duty Cycle 0 to 255 Enable Pin B for Motor2 Speed
 
@@ -166,11 +166,11 @@ void loop()
     //===============================================================================
     //                          auto  Follower Control
     //===============================================================================
-    // myservo.write(60); // setservo position to right side
+    myservo.write(60); // setservo position to right side
     delay(200);
     rightDistance = Distance_test();
 
-    // myservo.write(120); // setservo position to left side
+    myservo.write(120); // setservo position to left side
     delay(200);
     leftDistance = Distance_test();
 
@@ -221,7 +221,7 @@ void loop()
     }
   }
 
-  delay(10);*/
+  delay(10);
 }
 
 void servoPulse(int pin, int angle)
@@ -231,7 +231,7 @@ void servoPulse(int pin, int angle)
   // delayMicroseconds(pwm);
   // digitalWrite(pin, LOW);
   // delay(50); // Refresh cycle of servo
-  //  myservo.write(angle);
+  myservo.write(angle);
 }
 
 //**********************Ultrasonic_read****************************
