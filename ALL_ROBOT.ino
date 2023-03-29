@@ -1,5 +1,5 @@
 #include <ESP32Servo.h>
-#include "BluetoothSerial.h" // for esp 32 tests
+#include "BluetoothSerial.h" // for esp 32 testsss
 BluetoothSerial BT_Serial;
 
 Servo myservo; // create servo object to control servo
@@ -173,7 +173,10 @@ void loop()
     myservo.write(120); // setservo position to left side
     delay(200);
     leftDistance = Distance_test();
-
+    Serial.print("right distance : ");
+    Serial1.println(rightDistance);
+     Serial.print("left distance : ");
+    Serial1.println(leftDistance);
     if ((rightDistance > 70) && (leftDistance > 70))
     {
       Stop();
@@ -242,6 +245,7 @@ long Ultrasonic_read()
   digitalWrite(trigger, HIGH);
   delayMicroseconds(10);
   distance = pulseIn(echo, HIGH);
+
   return distance / 29 / 2;
 }
 
