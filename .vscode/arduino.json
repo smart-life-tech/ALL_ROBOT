@@ -1,5 +1,5 @@
 {
-    "board": "esp32:esp32:esp32",
-    "sketch": "ALL_ROBOT.ino",
+    "board": "arduino:avr:uno",
+    "sketch": "original\\original.ino",
     "port": "COM4"
 }
