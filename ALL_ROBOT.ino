@@ -1,5 +1,31 @@
 #include <SoftwareSerial.h>
-#include "Servo.h" //servo library
+//#include "Servo.h" //servo library
+
+// include the library code:
+#include <NewPing.h>
+#include <Servo.h>
+#include <AFMotor.h>
+
+#define RIGHT A0         // Right IR sensor connected to analog pin A2 of Arduino Uno:
+#define LEFT A1          // Left IR sensor connected to analog pin A3 of Arduino Uno:
+#define TRIGGER_PIN A3   // Trigger pin connected to analog pin A1 of Arduino Uno:
+#define ECHO_PIN A2      // Echo pin connected to analog pin A0 of Arduino Uno:
+#define MAX_DISTANCE 200 // Maximum ping distance:
+
+//unsigned int distance = 0;    // Variable to store ultrasonic sensor distance:
+unsigned int Right_Value = 0; // Variable to store Right IR sensor value:
+unsigned int Left_Value = 0;  // Variable to store Left IR sensor value:
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance:
+
+// create motor objects
+AF_DCMotor Motor1(1, MOTOR12_1KHZ);
+AF_DCMotor Motor2(2, MOTOR12_1KHZ);
+AF_DCMotor Motor3(3, MOTOR34_1KHZ);
+AF_DCMotor Motor4(4, MOTOR34_1KHZ);
+
+// Servo myservo; //create servo object to control the servo:
+int pos = 0; // variable to store the servo position:
 
 Servo myservo;                  // create servo object to control servo
 SoftwareSerial BT_Serial(2, 3); // RX, TX
@@ -130,22 +156,22 @@ void loop()
     else if (bt_ir_data == 2)
     {
       backword();
-       Serial.println("backward");
+      Serial.println("backward");
     } // if the bt_data is '2' the motor will Reverse
     else if (bt_ir_data == 3)
     {
       turnLeft();
-       Serial.println("turn left");
+      Serial.println("turn left");
     } // if the bt_data is '3' the motor will turn left
     else if (bt_ir_data == 4)
     {
       turnRight();
-       Serial.println("turn right");
+      Serial.println("turn right");
     } // if the bt_data is '4' the motor will turn right
     else if (bt_ir_data == 5)
     {
       Stop();
-     //  Serial.println("STOP");
+      //  Serial.println("STOP");
     } // if the bt_data '5' the motor will Stop
 
     //===============================================================================
@@ -170,73 +196,72 @@ void loop()
     //===============================================================================
     //                          auto  Follower Control
     //===============================================================================
-    myservo.write(60); // setservo position to right side
-    delay(200);
-    rightDistance = Distance_test();
+    delay(50);                  // wait 50ms between pings:
+    distance = sonar.ping_cm(); // send ping, get distance in cm and store it in 'distance' variable:
+    Serial.print("distance");
+    Serial.println(distance); // print the distance in serial monitor:
 
-    myservo.write(120); // setservo position to left side
-    delay(200);
-    leftDistance = Distance_test();
-    Serial.print("right distance : ");
-    Serial1.println(rightDistance);
-     Serial.print("left distance : ");
-    Serial1.println(leftDistance);
-    if ((rightDistance > 70) && (leftDistance > 70))
-    {
-      Serial.println("stoping");
-      Serial.print("right measuremnet :");
-      Serial.println(rightDistance);
-      Serial.print("right measuremnet :");
-      Serial.println(rightDistance);
-      Stop();
+    Right_Value = digitalRead(RIGHT); // read the value from Right IR sensor:
+    Left_Value = digitalRead(LEFT);   // read the value from Left IR sensor:
+
+    Serial.print("RIGHT");
+    Serial.println(Right_Value); // print the right IR sensor value in serial monitor:
+    Serial.print("LEFT");
+    Serial.println(Left_Value); // print the left IR sensor value in serial monitor:
+
+    if ((distance > 1) && (distance < 15))
+    { // check wheather the ultrasonic sensor's value stays between 1 to 15.
+      // If the condition is 'true' then the statement below will execute:
+      // Move Forward:
+      Motor1.setSpeed(130); // define motor1 speed:
+      Motor1.run(FORWARD);  // rotate motor1 clockwise:
+      Motor2.setSpeed(130); // define motor2 speed:
+      Motor2.run(FORWARD);  // rotate motor2 clockwise:
+      Motor3.setSpeed(130); // define motor3 speed:
+      Motor3.run(FORWARD);  // rotate motor3 clockwise:
+      Motor4.setSpeed(130); // define motor4 speed:
+      Motor4.run(FORWARD);  // rotate motor4 clockwise:
     }
-    else if ((rightDistance >= 20) && (leftDistance >= 20))
-    {
-      forword();
-      Serial.println("forward ");
-      Serial.print("right measuremnet :");
-      Serial.println(rightDistance);
-      Serial.print("right measuremnet :");
-      Serial.println(rightDistance);
+    else if ((Right_Value == 0) && (Left_Value == 1))
+    { // If the condition is 'true' then the statement below will execute:
+
+      // Turn Left
+      Motor1.setSpeed(150); // define motor1 speed:
+      Motor1.run(FORWARD);  // rotate motor1 cloclwise:
+      Motor2.setSpeed(150); // define motor2 speed:
+      Motor2.run(FORWARD);  // rotate motor2 clockwise:
+      Motor3.setSpeed(150); // define motor3 speed:
+      Motor3.run(BACKWARD); // rotate motor3 anticlockwise:
+      Motor4.setSpeed(150); // define motor4 speed:
+      Motor4.run(BACKWARD); // rotate motor4 anticlockwise:
+      delay(150);
     }
-    else if ((rightDistance <= 10) && (leftDistance <= 10))
-    {
-      backword();
-      Serial.println("backwards");
-      Serial.print("right measuremnet :");
-      Serial.println(rightDistance);
-      Serial.print("right measuremnet :");
-      Serial.println(rightDistance);
-      delay(100);
+    else if ((Right_Value == 1) && (Left_Value == 0))
+    { // If the condition is 'true' then the statement below will execute:
+
+      // Turn Right
+      Motor1.setSpeed(150); // define motor1 speed:
+      Motor1.run(BACKWARD); // rotate motor1 anticlockwise:
+      Motor2.setSpeed(150); // define motor2 speed:
+      Motor2.run(BACKWARD); // rotate motor2 anticlockwise:
+      Motor3.setSpeed(150); // define motor3 speed:
+      Motor3.run(FORWARD);  // rotate motor3 clockwise:
+      Motor4.setSpeed(150); // define motor4 speed:
+      Motor4.run(FORWARD);  // rotate motor4 clockwise:
+      delay(150);
     }
-    else if (rightDistance - 3 > leftDistance)
-    {
-      turnLeft();
-      Serial.println("left turn");
-      Serial.print("right measuremnet :");
-      Serial.println(rightDistance);
-      Serial.print("right measuremnet :");
-      Serial.println(rightDistance);
-      delay(100);
-    }
-    else if (rightDistance + 3 < leftDistance)
-    {
-      turnRight();
-      Serial.println("tuen right");
-      Serial.print("right measuremnet :");
-      Serial.println(rightDistance);
-      Serial.print("right measuremnet :");
-      Serial.println(rightDistance);
-      delay(100);
-    }
-    else
-    {
-      Stop();
-      Serial.println("stopping");
-      Serial.print("right measuremnet :");
-      Serial.println(rightDistance);
-      Serial.print("right measuremnet :");
-      Serial.println(rightDistance);
+    else if (distance > 15)
+    { // If the condition is 'true' then the statement below will execute:
+
+      // Stop
+      Motor1.setSpeed(0);  // define motor1 speed:
+      Motor1.run(RELEASE); // stop motor1:
+      Motor2.setSpeed(0);  // define motor2 speed:
+      Motor2.run(RELEASE); // stop motor2:
+      Motor3.setSpeed(0);  // define motor3 speed:
+      Motor3.run(RELEASE); // stop motor3:
+      Motor4.setSpeed(0);  // define motor4 speed:
+      Motor4.run(RELEASE); // stop motor4:
     }
   }
 
@@ -338,8 +363,7 @@ void forword()
 }
 
 void backword()
-{                          // backword
- 
+{ // backword
 
   digitalWrite(in1, LOW);  // Right Motor forword Pin
   digitalWrite(in2, HIGH); // Right Motor backword Pin
@@ -356,8 +380,7 @@ void turnRight()
 }
 
 void turnLeft()
-{                          // turnLeft
-
+{ // turnLeft
 
   digitalWrite(in1, HIGH); // Right Motor forword Pin
   digitalWrite(in2, LOW);  // Right Motor backword Pin
