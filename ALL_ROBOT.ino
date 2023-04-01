@@ -130,18 +130,22 @@ void loop()
     else if (bt_ir_data == 2)
     {
       backword();
+       Serial.println("backward");
     } // if the bt_data is '2' the motor will Reverse
     else if (bt_ir_data == 3)
     {
       turnLeft();
+       Serial.println("turn left");
     } // if the bt_data is '3' the motor will turn left
     else if (bt_ir_data == 4)
     {
       turnRight();
+       Serial.println("turn right");
     } // if the bt_data is '4' the motor will turn right
     else if (bt_ir_data == 5)
     {
       Stop();
+     //  Serial.println("STOP");
     } // if the bt_data '5' the motor will Stop
 
     //===============================================================================
@@ -173,7 +177,10 @@ void loop()
     myservo.write(120); // setservo position to left side
     delay(200);
     leftDistance = Distance_test();
-
+    Serial.print("right distance : ");
+    Serial1.println(rightDistance);
+     Serial.print("left distance : ");
+    Serial1.println(leftDistance);
     if ((rightDistance > 70) && (leftDistance > 70))
     {
       Serial.println("stoping");
@@ -332,6 +339,8 @@ void forword()
 
 void backword()
 {                          // backword
+ 
+
   digitalWrite(in1, LOW);  // Right Motor forword Pin
   digitalWrite(in2, HIGH); // Right Motor backword Pin
   digitalWrite(in3, HIGH); // Left Motor backword Pin
@@ -348,6 +357,8 @@ void turnRight()
 
 void turnLeft()
 {                          // turnLeft
+
+
   digitalWrite(in1, HIGH); // Right Motor forword Pin
   digitalWrite(in2, LOW);  // Right Motor backword Pin
   digitalWrite(in3, HIGH); // Left Motor backword Pin
