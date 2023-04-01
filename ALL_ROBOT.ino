@@ -126,22 +126,27 @@ void loop()
     if (bt_ir_data == 1)
     {
       forword();
+      Serial.println("forward");
     } // if the bt_data is '1' the DC motor will go forward
     else if (bt_ir_data == 2)
     {
       backword();
+       Serial.println("backward");
     } // if the bt_data is '2' the motor will Reverse
     else if (bt_ir_data == 3)
     {
       turnLeft();
+       Serial.println("turn left");
     } // if the bt_data is '3' the motor will turn left
     else if (bt_ir_data == 4)
     {
       turnRight();
+       Serial.println("turn right");
     } // if the bt_data is '4' the motor will turn right
     else if (bt_ir_data == 5)
     {
       Stop();
+     //  Serial.println("STOP");
     } // if the bt_data '5' the motor will Stop
 
     //===============================================================================
@@ -298,34 +303,38 @@ void Check_side()
 
 void forword()
 {                          // forword
-  digitalWrite(in1, HIGH); // Right Motor forword Pin
+    digitalWrite(in1, HIGH); // Right Motor forword Pin
   digitalWrite(in2, LOW);  // Right Motor backword Pin
-  digitalWrite(in3, LOW);  // Left Motor backword Pin
-  digitalWrite(in4, HIGH); // Left Motor forword Pin
+  digitalWrite(in3, HIGH); // Left Motor backword Pin
+  digitalWrite(in4, LOW);  // Left Motor forword Pin
 }
 
 void backword()
 {                          // backword
-  digitalWrite(in1, LOW);  // Right Motor forword Pin
-  digitalWrite(in2, HIGH); // Right Motor backword Pin
-  digitalWrite(in3, HIGH); // Left Motor backword Pin
-  digitalWrite(in4, LOW);  // Left Motor forword Pin
-}
+ 
 
-void turnRight()
-{                          // turnRight
   digitalWrite(in1, LOW);  // Right Motor forword Pin
   digitalWrite(in2, HIGH); // Right Motor backword Pin
   digitalWrite(in3, LOW);  // Left Motor backword Pin
   digitalWrite(in4, HIGH); // Left Motor forword Pin
 }
 
-void turnLeft()
-{                          // turnLeft
-  digitalWrite(in1, HIGH); // Right Motor forword Pin
-  digitalWrite(in2, LOW);  // Right Motor backword Pin
+void turnRight()
+{                          // turnRight
+   digitalWrite(in1, LOW);  // Right Motor forword Pin
+  digitalWrite(in2, HIGH); // Right Motor backword Pin
   digitalWrite(in3, HIGH); // Left Motor backword Pin
   digitalWrite(in4, LOW);  // Left Motor forword Pin
+}
+
+void turnLeft()
+{                          // turnLeft
+
+
+  digitalWrite(in1, HIGH); // Right Motor forword Pin
+  digitalWrite(in2, LOW);  // Right Motor backword Pin
+  digitalWrite(in3, LOW);  // Left Motor backword Pin
+  digitalWrite(in4, HIGH); // Left Motor forword Pin
 }
 
 void Stop()
