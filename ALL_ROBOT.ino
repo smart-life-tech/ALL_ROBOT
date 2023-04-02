@@ -1,5 +1,5 @@
 #include <SoftwareSerial.h>
-//#include "Servo.h" //servo library
+// #include "Servo.h" //servo library
 
 // include the library code:
 #include <NewPing.h>
@@ -12,18 +12,18 @@
 #define ECHO_PIN A2      // Echo pin connected to analog pin A0 of Arduino Uno:
 #define MAX_DISTANCE 200 // Maximum ping distance:
 
-//unsigned int distance = 0;    // Variable to store ultrasonic sensor distance:
+// unsigned int distance = 0;    // Variable to store ultrasonic sensor distance:
 unsigned int Right_Value = 0; // Variable to store Right IR sensor value:
 unsigned int Left_Value = 0;  // Variable to store Left IR sensor value:
 
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance:
 
 // create motor objects
-AF_DCMotor Motor1(1, MOTOR12_1KHZ);
+/*AF_DCMotor Motor1(1, MOTOR12_1KHZ);
 AF_DCMotor Motor2(2, MOTOR12_1KHZ);
 AF_DCMotor Motor3(3, MOTOR34_1KHZ);
 AF_DCMotor Motor4(4, MOTOR34_1KHZ);
-
+*/
 // Servo myservo; //create servo object to control the servo:
 int pos = 0; // variable to store the servo position:
 
@@ -213,20 +213,21 @@ void loop()
     { // check wheather the ultrasonic sensor's value stays between 1 to 15.
       // If the condition is 'true' then the statement below will execute:
       // Move Forward:
-      Motor1.setSpeed(130); // define motor1 speed:
-      Motor1.run(FORWARD);  // rotate motor1 clockwise:
-      Motor2.setSpeed(130); // define motor2 speed:
-      Motor2.run(FORWARD);  // rotate motor2 clockwise:
-      Motor3.setSpeed(130); // define motor3 speed:
-      Motor3.run(FORWARD);  // rotate motor3 clockwise:
-      Motor4.setSpeed(130); // define motor4 speed:
-      Motor4.run(FORWARD);  // rotate motor4 clockwise:
+      /* Motor1.setSpeed(130); // define motor1 speed:
+        Motor1.run(FORWARD);  // rotate motor1 clockwise:
+        Motor2.setSpeed(130); // define motor2 speed:
+        Motor2.run(FORWARD);  // rotate motor2 clockwise:
+        Motor3.setSpeed(130); // define motor3 speed:
+        Motor3.run(FORWARD);  // rotate motor3 clockwise:
+        Motor4.setSpeed(130); // define motor4 speed:
+        Motor4.run(FORWARD);  // rotate motor4 clockwise:*/
+      forword();
     }
     else if ((Right_Value == 0) && (Left_Value == 1))
     { // If the condition is 'true' then the statement below will execute:
 
       // Turn Left
-      Motor1.setSpeed(150); // define motor1 speed:
+      /*Motor1.setSpeed(150); // define motor1 speed:
       Motor1.run(FORWARD);  // rotate motor1 cloclwise:
       Motor2.setSpeed(150); // define motor2 speed:
       Motor2.run(FORWARD);  // rotate motor2 clockwise:
@@ -234,13 +235,14 @@ void loop()
       Motor3.run(BACKWARD); // rotate motor3 anticlockwise:
       Motor4.setSpeed(150); // define motor4 speed:
       Motor4.run(BACKWARD); // rotate motor4 anticlockwise:
-      delay(150);
+      delay(150);*/
+      turnLeft();
     }
     else if ((Right_Value == 1) && (Left_Value == 0))
     { // If the condition is 'true' then the statement below will execute:
 
       // Turn Right
-      Motor1.setSpeed(150); // define motor1 speed:
+      /*Motor1.setSpeed(150); // define motor1 speed:
       Motor1.run(BACKWARD); // rotate motor1 anticlockwise:
       Motor2.setSpeed(150); // define motor2 speed:
       Motor2.run(BACKWARD); // rotate motor2 anticlockwise:
@@ -248,20 +250,22 @@ void loop()
       Motor3.run(FORWARD);  // rotate motor3 clockwise:
       Motor4.setSpeed(150); // define motor4 speed:
       Motor4.run(FORWARD);  // rotate motor4 clockwise:
-      delay(150);
+      delay(150);*/
+      turnRight();
     }
     else if (distance > 15)
     { // If the condition is 'true' then the statement below will execute:
 
       // Stop
-      Motor1.setSpeed(0);  // define motor1 speed:
+      Stop();
+      /*Motor1.setSpeed(0);  // define motor1 speed:
       Motor1.run(RELEASE); // stop motor1:
       Motor2.setSpeed(0);  // define motor2 speed:
       Motor2.run(RELEASE); // stop motor2:
       Motor3.setSpeed(0);  // define motor3 speed:
       Motor3.run(RELEASE); // stop motor3:
       Motor4.setSpeed(0);  // define motor4 speed:
-      Motor4.run(RELEASE); // stop motor4:
+      Motor4.run(RELEASE); // stop motor4:*/
     }
   }
 
