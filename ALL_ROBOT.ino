@@ -183,7 +183,7 @@ void loop()
     //                          Obstacle Avoiding Control
     //===============================================================================
     distance_F = Ultrasonic_read();
-    Serial.print("S=");
+    Serial.print("distance =" );
     Serial.println(distance_F);
     if (distance_F > set)
     {
@@ -200,6 +200,8 @@ void loop()
 
 long IRremote_data()
 {
+  Serial.print("remote data ");
+  Serial.println(results.value);
   if (results.value == 0xFF02FD)
   {
     IR_data = 1;
