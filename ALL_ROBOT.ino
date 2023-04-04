@@ -1,6 +1,6 @@
 #include <SoftwareSerial.h>
 SoftwareSerial BT_Serial(2, 3); // RX, TX
-
+#include <NewPing.h>
 #include <IRremote.h>
 const int RECV_PIN = A5;
 IRrecv irrecv(RECV_PIN);
