@@ -183,10 +183,12 @@ void loop()
     //                          Obstacle Avoiding Control
     //===============================================================================
     distance_F = Ultrasonic_read();
-    Serial.print("distance =" );
+    Serial.print("distance =");
     Serial.println(distance_F);
     if (distance_F > set)
     {
+      analogWrite(enA, 70); // Write The Duty Cycle 0 to 255 Enable Pin A for Motor1 Speed
+      analogWrite(enB,70); // Write The Duty Cycle 0 to 255 Enable Pin B for Motor2 Speed
       forword();
     }
     else
