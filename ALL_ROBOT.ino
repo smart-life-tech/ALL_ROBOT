@@ -159,7 +159,7 @@ void loop()
     //===============================================================================
     //                          Line Follower Control
     //===============================================================================
-    if ((digitalRead(R_S) == 0) && (digitalRead(L_S) == 0))
+  /*  if ((digitalRead(R_S) == 0) && (digitalRead(L_S) == 0))
     {
       forword();
     } // if Right Sensor and Left Sensor are at White color then it will call forword function
@@ -175,6 +175,8 @@ void loop()
     {
       Stop();
     } // if Right Sensor and Left Sensor are at Black color then it will call Stop function
+    */
+   
   }
 
   if (mode == 2)
