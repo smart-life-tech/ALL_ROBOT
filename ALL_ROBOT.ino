@@ -159,6 +159,41 @@ void loop()
     //===============================================================================
     //                          Line Follower Control
     //===============================================================================
+        delay(50);                  // wait 50ms between pings:
+    distance = sonar.ping_cm(); // send ping, get distance in cm and store it in 'distance' variable:
+    Serial.print("distance");
+    Serial.println(distance); // print the distance in serial monitor:
+
+    Right_Value = digitalRead(RIGHT); // read the value from Right IR sensor:
+    Left_Value = digitalRead(LEFT);   // read the value from Left IR sensor:
+
+    Serial.print("RIGHT");
+    Serial.println(Right_Value); // print the right IR sensor value in serial monitor:
+    Serial.print("LEFT");
+    Serial.println(Left_Value); // print the left IR sensor value in serial monitor:
+
+    if ((distance > 1) && (distance < 15))
+    { // check wheather the ultrasonic sensor's value stays between 1 to 15.
+      // If the condition is 'true' then the statement below will execute:
+      // Move Forward:
+      forword();
+    }
+    else if ((Right_Value == 0) && (Left_Value == 1))
+    { // If the condition is 'true' then the statement below will execute:
+
+      // Turn Left
+      turnLeft();
+    }
+    else if ((Right_Value == 1) && (Left_Value == 0))
+    { // If the condition is 'true' then the statement below will execute:
+      turnRight();
+    }
+    else if (distance > 15)
+    { // If the condition is 'true' then the statement below will execute:
+
+      // Stop
+      Stop();
+    }
   /*  if ((digitalRead(R_S) == 0) && (digitalRead(L_S) == 0))
     {
       forword();
