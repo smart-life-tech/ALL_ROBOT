@@ -21,6 +21,18 @@ decode_results results;
 #define echo A2    // Echo pin
 #define trigger A3 // Trigger pin
 
+#define RIGHT A0         // Right IR sensor connected to analog pin A2 of Arduino Uno:
+#define LEFT A1          // Left IR sensor connected to analog pin A3 of Arduino Uno:
+#define TRIGGER_PIN A3   // Trigger pin connected to analog pin A1 of Arduino Uno:
+#define ECHO_PIN A2      // Echo pin connected to analog pin A0 of Arduino Uno:
+#define MAX_DISTANCE 200 // Maximum ping distance:
+
+// unsigned int distance = 0;    // Variable to store ultrasonic sensor distance:
+unsigned int Right_Value = 0; // Variable to store Right IR sensor value:
+unsigned int Left_Value = 0;  // Variable to store Left IR sensor value:
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance:
+
 int distance_L, distance_F = 30, distance_R;
 long distance;
 int set = 20;
